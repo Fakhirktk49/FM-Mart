@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>E-Commerce Home</title>
+{% block 'css' %}
+  <style>
+    .glass {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    @keyframes fadeUp {
+      0% { opacity: 0; transform: translateY(25px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-up {
+      animation: fadeUp 0.9s ease forwards;
+    }
+  </style>
+
+{% endblock 'css' %}
+</head>
+
+<body class="bg-gradient-to-br from-black via-[#111] to-[#1a1a1a] text-white min-h-screen">
+
+  <!-- NAVBAR -->
+  <nav class="glass fixed top-0 left-0 w-full p-4 flex items-center justify-between px-6 z-50">
+    
+    <!-- Logo -->
+    <div class="text-2xl font-bold">MyShop</div>
+
+    <!-- Center Links -->
+    <ul class="hidden md:flex gap-8 text-lg">
+      <li><a href="{% url 'home' %}" class="hover:text-blue-400 transition">Home</a></li>
+      {% if not user.is_authenticated %}
+      <li><a href="{% url 'register' %}" class="hover:text-blue-400 transition">Register</a></li>
+      {% endif %}
+      <li><a href="{% url 'about' %}" class="hover:text-blue-400 transition">About</a></li>
+    </ul>
+
+    <!-- Icons -->
+    <div class="flex items-center gap-5 text-2xl">
+      <!-- Search -->
+      <button><i class="fa fa-search"></i></button>
+
+    {% if user.is_authenticated %}
+      <!-- Cart -->
+     <a href="{% url 'cart' %}"> <button><i class="fa fa-shopping-cart"></i></button></a>
+     
+
+       <a href="{% url 'profile' %}">
+        <img src="https://www.citypng.com/public/uploads/preview/hd-profile-user-round-blue-icon-transparent-png-20641.png"
+        alt="User Profile"
+        class="w-8 h-8 rounded-full"> </a>
+         {% endif %}
+    </div>
+
+  </nav>
+  
+ {% if messages %}
+  <div class="fixed top-[72px] left-0 w-full flex justify-center z-40">
+    <div class="w-full max-w-5xl px-4">
+      {% for message in messages %}
+        <div class="mb-3 p-4 rounded-xl backdrop-blur-md border text-sm shadow-lg
+          {% if message.tags == 'success' %}
+            bg-green-500/10 border-green-400/30 text-green-300
+          {% elif message.tags == 'error' %}
+            bg-red-500/10 border-red-400/30 text-red-300
+          {% elif message.tags == 'warning' %}
+            bg-yellow-400/10 border-yellow-300/30 text-yellow-200
+          {% else %}
+            bg-blue-500/10 border-blue-400/30 text-blue-300
+          {% endif %}
+        ">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}
+
+  {% block 'hero' %}
+  <!-- HERO SECTION -->
+  <section class="pt-24">
+    
+    <!-- Welcome text -->
+    <h1 class="text-center text-4xl md:text-5xl font-extrabold fade-up">
+      Welcome to My Website
+    </h1>
+
+    <!-- Background hero image -->
+    <div 
+      class="relative mt-10 w-full h-[350px] md:h-[450px] rounded-3xl overflow-hidden fade-up"
+      style="animation-delay:0.2s;">
+      
+      <img 
+        src="https://images.unsplash.com/photo-1542291026-7eec264c27ff" 
+        class="w-full h-full object-cover opacity-70"
+      />
+
+      <!-- Website name overlay -->
+      <div class="absolute inset-0 flex items-center justify-center">
+        <h2 class="text-5xl md:text-6xl font-bold drop-shadow-2xl opacity-0 fade-up"
+            style="animation-delay:0.4s;">
+          MyShop
+        </h2>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- PRODUCT CARDS -->
+  <section class="mt-20 px-6 md:px-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 ">
+    {% for item in items %}
+    <!-- CARD 1 -->
+    <div class="glass p-6 rounded-3xl fade-up"
+         style="animation-delay:0.2s;">
+      <img 
+        src="{{item.item_image.url}}" 
+        class="w-full h-48 object-cover rounded-2xl mb-4">
+      
+      <h3 class="text-2xl font-bold">{{item.name}}</h3>
+      <p class="opacity-80 mt-1">{{item.description|truncatewords:10}}.</p>
+      <p class="mt-2 font-semibold text-xl">${{item.price}}</p>
+
+      {% if user.is_authenticated %}
+      <div class="flex gap-3 mt-5  hover:scale-105 transition transform duration-300">
+        <form method="POST">
+          {% csrf_token %}
+        <input type="hidden" name="id" value="{{item.id}}">
+        <input type='submit' class="flex-1 p-3 rounded-xl bg-blue-600 hover:bg-blue-700 transition" value='Add to Cart'>
+        </form>
+
+        <button class="flex-1 p-3 rounded-xl bg-green-600 hover:bg-green-700 transition">
+          Buy Now
+        </button>
+      </div>
+    </div>
+      {% endif  %}
+
+       {% if not user.is_authenticated %}
+      <div class="flex gap-3 mt-5  hover:scale-105 transition transform duration-300">
+        <a href="{% url 'login' %}" class="flex-1 p-3 rounded-xl bg-blue-600 hover:bg-blue-700 transition">
+          Add to Cart
+        </a>
+        <a href="{% url 'login' %}" class="flex-1 p-3 rounded-xl bg-green-600 hover:bg-green-700 transition">
+          Buy Now
+        </a>
+      </div>
+    </div>
+      {% endif  %}
+    {% endfor %}
+  </section>
+
+  {% endblock 'hero' %}
+
+  <!-- FOOTER -->
+  <footer class="glass mt-20 mx-6 md:mx-16 mb-10 rounded-3xl p-8 text-center fade-up"
+          style="animation-delay:0.3s;">
+    <p class="text-lg opacity-90">© 2025 MyShop. All Rights Reserved.</p>
+  </footer>
+
+  <!-- FontAwesome Icons -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+
+</body>
+</html>

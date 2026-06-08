@@ -1,0 +1,44 @@
+{% extends 'website/base.html' %}
+{% block 'css' %}{% endblock 'css' %}
+{% block 'hero' %} 
+<style>
+    @keyframes fadeSlide {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .glass {
+      background: rgba(255,255,255,0.07);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+  </style>
+<section class=" min-h-screen">
+  
+  <div class="w-full min-h-screen flex items-center justify-center">
+    
+    <div class="glass w-full max-w-md p-20 mt-20 rounded-3xl shadow-2xl animate-[fadeSlide_0.8s_ease]">
+      <h1 class="text-4xl font-bold text-center mb-6">About Us</h1>
+
+
+      <p class="text-center mt-6 text-sm opacity-80">
+    Welcome to our website! We are committed to delivering fresh, high-quality food with love and passion. Whether you're here for a quick bite or a family meal, we promise a flavorful experience every time.
+      </p>
+       <p align="center" ><strong ><span class="text-white">Email:</span ></strong> support@example.com</p>
+    <p align="center"><strong><span class="text-white">Phone:</span></strong> +92 300 1234567</p>
+    <p align="center"><strong><span class="text-white">Address:</span></strong> Main Road, Kohat, Pakistan</p>
+    <p align="center"><strong><span class="text-white">Follow us:</span></strong> Instagram | Facebook | Twitter</p>
+    </div>
+
+  </div>
+
+</section>
+{% endblock 'hero' %}
+<h2 class="text-4xl font-bold mb-6 text-white text-center">About Us</h2>
+  
+  <p class="text-lg leading-relaxed text-white mb-6" align="justify-center">
+    
+  </p>
+
+  <div class="space-y-10 text-black/50 text-base">
+   
+  </div>

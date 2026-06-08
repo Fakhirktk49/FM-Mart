@@ -1,0 +1,42 @@
+{% extends 'website/base.html' %}
+{% block 'css' %}{% endblock 'css' %}
+{% block 'hero'%}
+
+<style>
+    @keyframes fadeSlide {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .glass {
+      background: rgba(255,255,255,0.07);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+  </style>
+<section class="bg-black min-h-screen">
+  
+  <div class="w-full min-h-screen flex items-center justify-center">
+    
+    <div class="glass w-full max-w-md p-10 rounded-3xl shadow-2xl animate-[fadeSlide_0.8s_ease]">
+      <h1 class="text-4xl font-bold text-center mb-6">Welcome Back</h1>
+
+      <form class="space-y-5" method="POST">
+        {% csrf_token %}
+        <input type="email" name="email" id="email"  placeholder="Email" class="w-full p-3 rounded-xl bg-white/10 focus:bg-white/20 outline-none transition" />
+        <input type="password" name="password" id="password"  placeholder="Password" class="w-full p-3 rounded-xl bg-white/10 focus:bg-white/20 outline-none transition" />
+        <input type='submit' value='Login' class="w-full bg-blue-600 hover:bg-blue-700 p-3 rounded-xl font-semibold transition">
+      </form>
+
+      <p class="text-center mt-6 text-sm opacity-80">
+        Don't have an account?
+        <a href="{% url 'register' %}" class="text-blue-400 hover:underline">Register</a>
+      </p>
+    </div>
+
+  </div>
+  
+
+</section>
+{% endblock 'hero' %}
+
+

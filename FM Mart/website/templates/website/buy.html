@@ -1,0 +1,135 @@
+{% extends "website/base.html" %}
+
+{% block 'hero' %}
+<div class="min-h-screen  pt-28 px-6 md:px-16 text-white ">
+
+    <div class="glass max-w-3xl mx-auto rounded-3xl shadow-xl p-8">
+
+        <!-- Heading -->
+        <h2 class="text-3xl font-bold text-center mb-6">Checkout</h2>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+              {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}
+         <span class="text-red-600 text-sm mt-1"> {{error}}<br></span>
+        {% endfor %}
+        {% endif %}
+
+            <!-- Personal Details -->
+            <div class="glass p-6 rounded-2xl mb-8">
+                <h3 class="text-xl font-semibold mb-4">Personal Information</h3>
+
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+    
+                       <label class="text-gray-300" for="{{form.name.html_name}}">{{form.name.label_tag}}</label>
+                        <input type="{{form.name.field.widget.input_type}}" id="{{form.name.html_name}}" name="{{form.name.html_name}}" class="w-full mt-1 p-3 rounded-xl bg-white/10 border border-white/20 text-white" placeholder="Enter your name.">
+                    {% if form.email.errors %}
+                    {% for error in form.email.errors %}
+                    <span class="text-red-600 text-sm mt-1"> {{error}}<br></span>
+                    {% endfor %}
+                        {% endif %}
+                        </div>
+
+                           <div>
+
+                        <label class="text-gray-300" for="{{form.eamil.html_name}}">{{form.email.label_tag}}</label>
+                        <input type="{{form.email.field.widget.input_type}}" id="{{form.email.html_name}}" name="{{form.email.html_name}}" class="w-full mt-1 p-3 rounded-xl bg-white/10 border border-white/20 text-white" placeholder="Enter your email.">
+                    {% if form.eamil.errors %}
+                    {% for error in form.email.errors %}
+                    <span class="text-red-600 text-sm mt-1"> {{error}}<br></span>
+                    {% endfor %}
+                        {% endif %}
+
+                        </div>
+
+                        
+                             <div>
+
+                        <label class="text-gray-300" for="{{form.phone.html_name}}">{{form.phone.label_tag}}</label>
+                        <input type="{{form.phone.field.widget.input_type}}" id="{{form.phone.html_name}}" name="{{form.phone.html_name}}" class="w-full mt-1 p-3 rounded-xl bg-white/10 border border-white/20 text-white" placeholder=" (e.g., 03001234567 or +9230001234567).">
+                    {% if form.phone.errors %}
+                    {% for error in form.phone.errors %}
+                    <span class="text-red-600 text-sm mt-1"> {{error}}<br></span>
+                    {% endfor %}
+                        {% endif %}
+
+                        </div>
+
+                        
+
+                    
+                </div>
+            </div>
+
+            <!-- Shipping Details -->
+            <div class="glass p-6 rounded-2xl mb-8">
+                <h3 class="text-xl font-semibold mb-4">Shipping Information</h3>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-gray-300">Address</label>
+                        <input type="text" name="address" 
+                               class="w-full mt-1 p-3 rounded-xl bg-white/10 border border-white/20 text-white"
+                               required>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-gray-300">City</label>
+                            <input type="text" name="city" 
+                                   class="w-full mt-1 p-3 rounded-xl bg-white/10 border border-white/20 text-white"
+                                   required>
+                        </div>
+
+                        <div>
+                            <label class="text-gray-300">Postal Code</label>
+                            <input type="text" name="postal_code" 
+                                   class="w-full mt-1 p-3 rounded-xl bg-white/10 border border-white/20 text-white"
+                                   required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Method -->
+            <div class="glass p-6 rounded-2xl mb-8">
+                <h3 class="text-xl font-semibold mb-4">Payment Method</h3>
+
+                <div class="space-y-3">
+
+                    <label class="flex items-center gap-3 p-3 glass rounded-xl cursor-pointer">
+                        <input type="radio" name="payment_method" value="cod" class="h-5 w-5" checked>
+                        <span class="text-white">Cash on Delivery</span>
+                    </label>
+
+                    <label class="flex items-center gap-3 p-3 glass rounded-xl cursor-pointer">
+                        <input type="radio" name="payment_method" value="easypaisa" class="h-5 w-5">
+                        <span class="text-white">Easypaisa</span>
+                    </label>
+
+                    <label class="flex items-center gap-3 p-3 glass rounded-xl cursor-pointer">
+                        <input type="radio" name="payment_method" value="jazzcash" class="h-5 w-5">
+                        <span class="text-white">JazzCash</span>
+                    </label>
+
+                    <label class="flex items-center gap-3 p-3 glass rounded-xl cursor-pointer">
+                        <input type="radio" name="payment_method" value="bank" class="h-5 w-5">
+                        <span class="text-white">Bank Transfer</span>
+                    </label>
+
+                </div>
+            </div>
+
+            <!-- Place Order Button -->
+            <div class="text-center mt-6">
+                <button class="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-2xl shadow transition">
+                    Place Order
+                </button>
+            </div>
+
+        </form>
+    </div>
+</div>
+{% endblock 'hero' %}
