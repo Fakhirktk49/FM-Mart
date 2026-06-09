@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomUser,Items,Carts,Quantity
+from .models import CustomUser,Items,Carts,Quantity,Order
 from django.contrib.auth.admin import UserAdmin
 
 # Register your models here.
@@ -32,5 +32,10 @@ class ItemsAdmin(admin.ModelAdmin):
 class CartsAdmin(admin.ModelAdmin):
     list_display=['user']
     list_filter=['user']
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display=['name','order_placed_at','order_delivered']
+    list_filter=['order_delivered']
 
 admin.site.register(Quantity)

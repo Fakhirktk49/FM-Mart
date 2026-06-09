@@ -2,7 +2,13 @@ from django import forms
 from core.models import CustomUser,Order
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
+
 import re
+
+CHOICES=(('cash_on_delevry','cash_on_delevery'),
+         ('easypaisa','easypaisa'),
+         ('jazcash','jazcash'),
+         ('back_transfer','back transfer'))
 
 phone_regex=RegexValidator(regex='^03[0-9]{9}$',message='Enter a valid Number(e.g., 03001234567 or +9230001234567)')
 
@@ -73,20 +79,28 @@ class ProfileImage(forms.ModelForm):
 
         fields=['profile_image']
 
-        widget={ 'profile_image':forms.ClearableFileInput()}
+        widgets={ 'profile_image':forms.ClearableFileInput()}
 
 class OrderForm(forms.ModelForm):
+    payment_method=forms.ChoiceField(choices=CHOICES,widget=forms.RadioSelect(),error_messages={'required':'Payment Method is required.'})
     class Meta:
         model=Order
-        fields='__all__'
+        fields=['name','phone','email','city','address','postal_code','item','quantity','price']
 
-        widget={'name':forms.TextInput(attrs={'placeholder':'Name','class':'w-full p-3 rounded-xl bg-white/10 focus:bg-white/20 outline-none transition'}),
+        widgets={'name':forms.TextInput(attrs={'placeholder':'Enter your name.','class':'w-full p-3 rounded-xl bg-white/10 focus:bg-white/20 outline-none transition'}),
                 'phone':forms.TextInput(attrs={'placeholder':'Phone: (e.g., 03001234567 or +9230001234567)','class':'w-full p-3 rounded-xl bg-white/10 focus:bg-white/20 outline-none transition'}),
                 'email':forms.EmailInput(attrs={'placeholder':'Enter your email.','class':'w-full p-3 rounded-xl bg-white/10 focus:bg-white/20 outline-none transition'}),
                 'city':forms.TextInput(attrs={'placeholder':'Enter city name.','class':'w-full p-3 rounded-xl bg-white/10 focus:bg-white/20 outline-none transition'}),
                 'address':forms.TextInput(attrs={'placeholder':'Adress.','class':'w-full p-3 rounded-xl bg-white/10 focus:bg-white/20 outline-none transition'}),
                 'postal_code':forms.NumberInput(attrs={'placeholder':'Enter your postal code','class':'w-full p-3 rounded-xl bg-white/10 focus:bg-white/20 outline-none transition'}),
-                'payment_method':forms.CheckboxInput(attrs={'class':'w-full p-3 rounded-xl bg-white/10 focus:bg-white/20 outline-none transition'})}
+                'item':forms.TextInput(attrs={'class':"w-full p-3 rounded-xl bg-white/10 focus:bg-white/20 outline-none transition"}),
+                'quantity':forms.NumberInput(attrs={'class':'w-full p-3 rounded-xl bg-white/10 focus:bg-white/20 outline-none transition'}),
+                'price':forms.TextInput(attrs={'class':'w-full p-3 rounded-xl bg-white/10 focus:bg-white/20 outline-none transition'})
+                
+                }
+    
+        
+   
 
         
     

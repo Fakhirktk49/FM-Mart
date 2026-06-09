@@ -1,6 +1,7 @@
 {% extends "website/base.html" %}
 
 {% block 'hero' %}
+
 <div class="min-h-screen  pt-28 px-6 md:px-16 text-white ">
 
     <div class="glass max-w-3xl mx-auto rounded-3xl shadow-xl p-8">
@@ -8,35 +9,124 @@
         <!-- Heading -->
         <h2 class="text-3xl font-bold text-center mb-6">Checkout</h2>
 
-        <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
+        <form method="POST">
+                  {% csrf_token %}
               {% if form.non_field_errors %}
         {% for error in form.non_field_errors %}
          <span class="text-red-600 text-sm mt-1"> {{error}}<br></span>
         {% endfor %}
         {% endif %}
-
-            <!-- Personal Details -->
+          <!-- Personal Details -->
             <div class="glass p-6 rounded-2xl mb-8">
                 <h3 class="text-xl font-semibold mb-4">Personal Information</h3>
 
-                <div class="grid md:grid-cols-2 gap-4">
+                <div class="grid md:grid-cols-1  gap-4">
                     <div>
+                {% for field in form %}
+                {% if field.html_name != 'item' and field.html_name != 'payment_method' and field.html_name != 'quantity' and field.html_name != 'price' %}
+                <label class="text-gray-300" for="{{field.html_name}}">{{field.label_tag}}</label>
+                 <input type="{{field.field.widget.input_type}}" id="{{field.html_name}}" name="{{field.html_name}}" class="{{field.field.widget.attrs.class}}" placeholder="{{form.field.widget.attrs.placeholder}}">
+                 
+               
+
+                {% if field.errors %}
+                {% for error in field.errors %}
+                <span class="text-red-600 text-sm mt-1"> {{error}}<br></span>
+                {% endfor %}
+                {% endif %}
+                {% endif %}
+
+                {% if field.html_name == 'item' %}
+                 <label class="text-gray-300" for="{{field.html_name}}">{{field.label_tag}}</label>
+                 <input type="{{field.field.widget.input_type}}" id="{{field.html_name}}" name="{{field.html_name}}" class="{{field.field.widget.attrs.class}}" value="{{item_name}}" readonly>
+
+                 {% endif %}
+                     
+
+                 {% if field.html_name == 'quantity' %}
+                 <label class="text-gray-300" for="{{field.html_name}}">{{field.label_tag}}</label>
+                 <input type="{{field.field.widget.input_type}}" id="{{field.html_name}}" name="{{field.html_name}}" class="{{field.field.widget.attrs.class}}" value="{{quantity_of_order}}" readonly>
+
+                 {% endif %}
+
+                  {% if field.html_name == 'price' %}
+                 <label class="text-gray-300" for="{{field.html_name}}">{{field.label_tag}}</label>
+                 <input type="{{field.field.widget.input_type}}" id="{{field.html_name}}" name="{{field.html_name}}" class="{{field.field.widget.attrs.class}}" value="{{price_of_order}}$" readonly>
+
+                 {% endif %}
+                        
+                        <br>
+
+                        
+                
+               
+                
+
+
+                 {% endfor %}
+
+                   {% for value,label in form.payment_method.field.choices %}
+                 <div class="space-y-3">
+                 <label class="flex items-center gap-3 p-3 glass rounded-xl cursor-pointer">
+
+                      <input
+                type="{{ form.payment_method.field.widget.input_type }}"
+                name="{{ form.payment_method.html_name }}"
+                value="{{ value }}"
+                class="h-5 w-5">
+
+
+            <span class="text-white">{{ label }}</span>
+
+                  </label>
+                  </div>
+                 
+                 
+                   {% endfor %}
+                  {% for error in form.payment_method.errors %}
+                   <span class="text-red-600 text-sm mt-1"> {{error}}<br></span>
+                   {% endfor %}
+
+                 
+                        </div>
+                        </div>
+            </div>
+
+
+         <!-- Place Order Button -->
+            <div class="text-center mt-6">
+                <input type='submit' class="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-2xl shadow transition" value="submit">
+           
+              
+            </div>
+
+        </form>
+
+
+    </div>
+</div>
+{% endblock 'hero' %}
+
+
+<!-- <form method="POST" enctype="multipart/form-data" novalidate>
+      
+
+          
     
-                       <label class="text-gray-300" for="{{form.name.html_name}}">{{form.name.label_tag}}</label>
-                        <input type="{{form.name.field.widget.input_type}}" id="{{form.name.html_name}}" name="{{form.name.html_name}}" class="w-full mt-1 p-3 rounded-xl bg-white/10 border border-white/20 text-white" placeholder="Enter your name.">
-                    {% if form.email.errors %}
-                    {% for error in form.email.errors %}
-                    <span class="text-red-600 text-sm mt-1"> {{error}}<br></span>
+                     
+                       
+                    {% if form.name.errors %}
+                    {% for error in form.name.errors %}
+                   
                     {% endfor %}
                         {% endif %}
                         </div>
 
-                           <div>
+                   
 
-                        <label class="text-gray-300" for="{{form.eamil.html_name}}">{{form.email.label_tag}}</label>
+                        <label class="text-gray-300" for="{{form.email.html_name}}">{{form.email.label_tag}}</label>
                         <input type="{{form.email.field.widget.input_type}}" id="{{form.email.html_name}}" name="{{form.email.html_name}}" class="w-full mt-1 p-3 rounded-xl bg-white/10 border border-white/20 text-white" placeholder="Enter your email.">
-                    {% if form.eamil.errors %}
+                    {% if form.email.errors %}
                     {% for error in form.email.errors %}
                     <span class="text-red-600 text-sm mt-1"> {{error}}<br></span>
                     {% endfor %}
@@ -70,24 +160,47 @@
                 <div class="space-y-4">
                     <div>
                         <label class="text-gray-300">Address</label>
-                        <input type="text" name="address" 
+                        <input type="{{form.address.field.widget.input_type}}" name="{{form.phone.html_name}}" 
                                class="w-full mt-1 p-3 rounded-xl bg-white/10 border border-white/20 text-white"
                                required>
+                         {% if form.address.errors %}
+                    {% for error in form.address.errors %}
+                    <span class="text-red-600 text-sm mt-1"> {{error}}<br></span>
+                    {% endfor %}
+                        {% endif %}
                     </div>
 
                     <div class="grid md:grid-cols-2 gap-4">
                         <div>
                             <label class="text-gray-300">City</label>
-                            <input type="text" name="city" 
+                            <input type="{{form.city.field.widget.input_type}}" name="{{form.city.html_name}}" 
                                    class="w-full mt-1 p-3 rounded-xl bg-white/10 border border-white/20 text-white"
                                    required>
+                                    {% if form.city.errors %}
+                    {% for error in form.city.errors %}
+                    <span class="text-red-600 text-sm mt-1"> {{error}}<br></span>
+                    {% endfor %}
+                        {% endif %}
                         </div>
 
                         <div>
                             <label class="text-gray-300">Postal Code</label>
-                            <input type="text" name="postal_code" 
+                            <input type="{{form.postal_code.field.widget.input_type}}" name="{{form.postal_code.html_name}}" 
                                    class="w-full mt-1 p-3 rounded-xl bg-white/10 border border-white/20 text-white"
                                    required>
+                                    {% if form.postal_code.errors %}
+                    {% for error in form.postal_code.errors %}
+                    <span class="text-red-600 text-sm mt-1"> {{error}}<br></span>
+                    {% endfor %}
+                        {% endif %}
+                        </div>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-gray-300">Item</label>
+                            <input type="text" value="{{item_name}}" 
+                                   class="w-full mt-1 p-3 rounded-xl bg-white/10 border border-white/20 text-white"
+                                   disabled>
                         </div>
                     </div>
                 </div>
@@ -95,41 +208,53 @@
 
             <!-- Payment Method -->
             <div class="glass p-6 rounded-2xl mb-8">
-                <h3 class="text-xl font-semibold mb-4">Payment Method</h3>
+                
 
                 <div class="space-y-3">
 
                     <label class="flex items-center gap-3 p-3 glass rounded-xl cursor-pointer">
-                        <input type="radio" name="payment_method" value="cod" class="h-5 w-5" checked>
+                        <input type="{{form.payment_method.field.widget.input_type}}" name="{{form.payment_method.html_name}}" value="cod" class="h-5 w-5" checked>
+                         {% if form.payment_method.errors %}
+                    {% for error in form.payment_method.errors %}
+                    <span class="text-red-600 text-sm mt-1"> {{error}}<br></span>
+                    {% endfor %}
+                        {% endif %}
                         <span class="text-white">Cash on Delivery</span>
                     </label>
 
                     <label class="flex items-center gap-3 p-3 glass rounded-xl cursor-pointer">
-                        <input type="radio" name="payment_method" value="easypaisa" class="h-5 w-5">
+                        <input type="{{form.payment_method.field.widget.input_type}}" name="{{form.payment_method.field.widget.input_type}}" value="easypaisa" class="h-5 w-5">
+                        {% if form.payment_method.errors %}
+                    {% for error in form.payment_method.errors %}
+                    <span class="text-red-600 text-sm mt-1"> {{error}}<br></span>
+                    {% endfor %}
+                        {% endif %}
                         <span class="text-white">Easypaisa</span>
                     </label>
 
                     <label class="flex items-center gap-3 p-3 glass rounded-xl cursor-pointer">
-                        <input type="radio" name="payment_method" value="jazzcash" class="h-5 w-5">
+                        <input type="{{form.payment_method.field.widget.input_type}}" name="{{form.payment_method.html_name}}" value="jazzcash" class="h-5 w-5">
+                        {% if form.payment_method.errors %}
+                    {% for error in form.payment_method.errors %}
+                    <span class="text-red-600 text-sm mt-1"> {{error}}<br></span>
+                    {% endfor %}
+                        {% endif %}
                         <span class="text-white">JazzCash</span>
                     </label>
 
                     <label class="flex items-center gap-3 p-3 glass rounded-xl cursor-pointer">
-                        <input type="radio" name="payment_method" value="bank" class="h-5 w-5">
+                        <input type="{{form.payment_method.field.widget.input_type}}" name="{{form.payment_method.html_name}}" value="bank" class="h-5 w-5">
+                         {% if form.payment_method.errors %}
+                    {% for error in form.payment_method.errors %}
+                    <span class="text-red-600 text-sm mt-1"> {{error}}<br></span>
+                    {% endfor %}
+                        {% endif %}
                         <span class="text-white">Bank Transfer</span>
                     </label>
 
+                    
                 </div>
             </div>
 
-            <!-- Place Order Button -->
-            <div class="text-center mt-6">
-                <button class="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-2xl shadow transition">
-                    Place Order
-                </button>
-            </div>
-
-        </form>
-    </div>
-</div>
-{% endblock 'hero' %}
+           
+        </form> -->

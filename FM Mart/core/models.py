@@ -83,10 +83,17 @@ class Order(models.Model):
     name=models.CharField()
     email=models.EmailField()
     phone=models.CharField()
-    address=models.TextField()
+    address=models.CharField()
     city=models.CharField()
     postal_code=models.PositiveIntegerField()
-    payment_method=models.BooleanField(choices=choices)
+    item=models.CharField(default=None)
+    order_placed_at=models.DateTimeField(auto_now_add=True)
+    quantity=models.IntegerField(default=None)
+    price=models.CharField(default=None)
+    payment_received=models.BooleanField(default=0)
+    payment_method=models.CharField(choices=choices)
+    order_on_way=models.BooleanField(default=0)
+    order_delivered=models.BooleanField(default=0)
 
 
 

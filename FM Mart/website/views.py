@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from website.forms import RegistrationForm,EditForm,ProfileImage,OrderForm
-from core.models import CustomUser,Items,Carts,Quantity
+from core.models import CustomUser,Items,Carts,Quantity,Order
 from django.utils.http import urlsafe_base64_decode,urlsafe_base64_encode
 from django.utils.encoding import force_bytes,force_str
 from django.contrib.auth.tokens import default_token_generator
@@ -157,7 +157,7 @@ def activate_account(request,uid,token):
         return redirect('login')
 
 
-
+@login_required
 def cart(request):
     cart=Carts.objects.filter(user=request.user)
     for cart in cart:
@@ -212,19 +212,44 @@ def profile(request):
         user=request.user
     return render(request,'website/profile.html',{'user':user})
 
-def buy(request):
+@login_required
+def buy(request,id):
     if request.method == 'POST':
-        form=OrderForm(request.POST,request.FILES)
+        if Quantity.objects.filter(id=id).first():
+            quantity=Quantity.objects.get(id=id)
+            quantity_of_order=quantity.quantity
+            price_of_order=quantity.price_for_user
+            item_name=quantity.quantity_items.name
+        form=OrderForm(request.POST)
+        print('Here....................')
         if form.is_valid():
-            user=request.user
-            order=form.save(commit=False)
-            order.user=user
-            order.save()
+            print(f'----{form.errors}')
+            print('here2.............................')
+            payment_method=form.cleaned_data['payment_method']
+            form=form.save(commit=False)    
+          
+            form.payment_method=payment_method
+          
+            form.save()
+           
             messages.success(request,'Order placed successfully.')
             return redirect('home')
-
-    form=OrderForm()
-    return render(request,'website/buy.html',{'form':form})
+        
+        else:
+            print(form.errors)
+            print('error occurd in form validation')
+    else:
+        print('here33........................')
+        form=OrderForm()
+        if Quantity.objects.filter(id=id).first():
+            quantity=Quantity.objects.get(id=id)
+            quantity_of_order=quantity.quantity
+            price_of_order=quantity.price_for_user
+            item_name=quantity.quantity_items.name
+        else:
+            messages.error(request,'Some error occured.')
+            return redirect('cart')
+    return render(request,'website/buy.html',{'form':form,'item_name':item_name,'quantity_of_order':quantity_of_order,'price_of_order':price_of_order})
 
 def change_password(request):
     if request.method == 'POST':
