@@ -1,0 +1,50 @@
+# =========================
+# Django
+# =========================
+*.log
+*.pot
+*.pyc
+__pycache__/
+db.sqlite3
+media/
+
+# Django migrations (optional if you want to track them, otherwise remove this line)
+# */migrations/*.py
+# */migrations/*.pyc
+
+# =========================
+# Virtual Environment
+# =========================
+venv/
+env/
+ENV/
+.venv/
+.env/
+
+# =========================
+# Python
+# =========================
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+
+# =========================
+# IDE / Editor
+# =========================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# =========================
+# OS files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Environment variables
+# =========================
+.env
