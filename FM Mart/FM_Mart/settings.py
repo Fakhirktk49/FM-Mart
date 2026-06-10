@@ -3,6 +3,7 @@
 from pathlib import Path
 from pathlib import Path
 from django.contrib.messages import constants as messages
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -125,14 +126,14 @@ AUTH_USER_MODEL='core.CustomUser'
 
 LOGOUT_REDIRECT_URL='home'
 
-EMAIL_HOST='smtp.gmail.com'
-EMAIL_PORT=587
+EMAIL_HOST=config('EMAIL_HOST')
+EMAIL_PORT=config('EMAIL_PORT')
 EMAIL_USE_TLS=True
 
 
 
-EMAIL_HOST_USER='fakhirmasood49@gmail.com'
-EMAIL_HOST_PASSWORD='vajedaspdplqldak'
+EMAIL_HOST_USER=config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD=config('EMAIL_HOST_PASSWORD')
 DEFAULT_FORM_EMAIL=EMAIL_HOST_USER
 LOGIN_URL='home'
 
