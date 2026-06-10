@@ -35,7 +35,7 @@ class CartsAdmin(admin.ModelAdmin):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display=['name','order_placed_at','order_delivered']
-    list_filter=['order_delivered']
+    list_display=['name','order_placed_at','status']
+    list_filter=['status']
 
 admin.site.register(Quantity)

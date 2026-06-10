@@ -5,6 +5,10 @@ choices=(('cash_on_delevry','cash_on_delevery'),
          ('jazcash','jazcash'),
          ('back_transfer','back transfer'))
 
+STATUS_CHOICES=(('Pending','Pending'),
+                ('On The Way','On The Way'),
+                ('Delivered','Delivered'))
+
 # Create your models here.
 class User(BaseUserManager):
     def create_user(self,email,password=None):
@@ -79,7 +83,7 @@ class Quantity(models.Model):
     quantity=models.PositiveIntegerField(default=0)
 
 class Order(models.Model):
-    user=models.ManyToManyField(CustomUser)
+    user=models.ForeignKey(CustomUser,on_delete=models.DO_NOTHING,default=None)
     name=models.CharField()
     email=models.EmailField()
     phone=models.CharField()
@@ -92,8 +96,7 @@ class Order(models.Model):
     price=models.CharField(default=None)
     payment_received=models.BooleanField(default=0)
     payment_method=models.CharField(choices=choices)
-    order_on_way=models.BooleanField(default=0)
-    order_delivered=models.BooleanField(default=0)
+    status=models.CharField(choices=STATUS_CHOICES,default='Pending')
 
 
 

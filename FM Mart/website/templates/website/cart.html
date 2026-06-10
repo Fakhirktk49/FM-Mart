@@ -23,10 +23,79 @@
 <div class="pt-32 px-6">
 
     <!-- Top Large Cart Summary Card -->
-    <div class="glass w-full p-6 rounded-2xl mb-10 shadow-xl text-white backdrop-blur-xl">
-        <h1 class="text-3xl font-bold mb-2">Your Shopping Cart</h1>
-        <p class="opacity-80">Review your items and proceed to checkout.</p>
-    </div>
+   <div class="glass w-full p-6 rounded-2xl mb-10 shadow-xl text-white backdrop-blur-xl">
+    <h1 class="text-3xl font-bold mb-2">Your Orders</h1>
+    <p class="opacity-80">View and track all your placed orders.</p>
+</div>
+
+<div class="glass w-full p-6 rounded-2xl shadow-xl text-white backdrop-blur-xl overflow-x-auto">
+    <table class="w-full text-left">
+        <thead>
+            <tr class="border-b border-white/20">
+                <th class="py-4 px-3">Order ID</th>
+                <th class="py-4 px-3">Date</th>
+                <th class="py-4 px-3">Total</th>
+                <th class="py-4 px-3">Payment</th>
+                <th class="py-4 px-3">Status</th>
+                <th class="py-4 px-3">Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for order in orders %}
+            <tr class="border-b border-white/10 hover:bg-white/5 transition">
+                <td class="py-4 px-3 font-semibold">
+                    #{{ order.id }}
+                </td>
+
+                <td class="py-4 px-3">
+                    {{ order.order_placed_at|date:"d M Y" }}
+                </td>
+
+                <td class="py-4 px-3">
+                    Rs. {{ order.price }}
+                </td>
+
+                <td class="py-4 px-3">
+                    {{ order.payment_method }}
+                </td>
+
+               <td class="py-4 px-3">
+    {% if order.status == 'Pending' %}
+        <span class="px-3 py-1 rounded-full bg-yellow-500/20 text-yellow-400">
+            {{ order.get_status_display }}
+        </span>
+
+    {% elif order.status == 'On The Way' %}
+        <span class="px-3 py-1 rounded-full bg-blue-500/20 text-blue-400">
+            {{ order.get_status_display }}
+        </span>
+
+    {% elif order.status == 'Delivered' %}
+        <span class="px-3 py-1 rounded-full bg-green-500/20 text-green-400">
+            {{ order.get_status_display }}
+        </span>
+
+    {% endif %}
+</td>
+                <td class="py-4 px-3">
+                    <a href="#"
+                       class="px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg text-sm font-medium">
+                        View
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="py-8 text-center opacity-70">
+                    No orders found.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<br>
 
     <!-- 3 Cards in One Row -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">

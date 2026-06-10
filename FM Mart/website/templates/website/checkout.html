@@ -1,0 +1,98 @@
+{% extends 'website/base.html' %}
+{% block 'css' %}
+<style>
+    .glass {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    @keyframes fadeUp {
+      0% { opacity: 0; transform: translateY(25px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-up {
+      animation: fadeUp 0.9s ease forwards;
+    }
+  </style>
+{% endblock 'css' %}
+
+{% block 'hero' %}
+
+
+
+<div class="glass w-full p-6 rounded-2xl mb-10 shadow-xl text-white backdrop-blur-xl">
+    <h1 class="text-3xl font-bold mb-2">{{ product.name }}</h1>
+    <p class="opacity-80">{{ product.category.name }}</p>
+</div>
+
+<div class="grid lg:grid-cols-2 gap-8">
+
+    <!-- Product Image -->
+    <div class="glass p-6 rounded-2xl shadow-xl backdrop-blur-xl">
+        <img
+            src="{{ product.image.url }}"
+            alt="{{ product.name }}"
+            class="w-full h-96 object-cover rounded-xl">
+    </div>
+
+    <!-- Product Information -->
+    <div class="glass p-6 rounded-2xl shadow-xl text-white backdrop-blur-xl">
+
+        <h2 class="text-2xl font-bold mb-4">
+            {{ product.name }}
+        </h2>
+
+        <p class="text-3xl font-bold text-green-400 mb-6">
+            Rs. {{ product.price }}
+        </p>
+
+        <div class="space-y-4 mb-6">
+            <div>
+                <span class="font-semibold">Brand:</span>
+                {{ product.brand }}
+            </div>
+
+            <div>
+                <span class="font-semibold">Stock:</span>
+
+                {% if product.stock > 0 %}
+                    <span class="text-green-400">In Stock</span>
+                {% else %}
+                    <span class="text-red-400">Out of Stock</span>
+                {% endif %}
+            </div>
+
+            <div>
+                <span class="font-semibold">Category:</span>
+                {{ product.category.name }}
+            </div>
+        </div>
+
+        <form method="post" action="{% url 'add_to_cart' product.id %}">
+            {% csrf_token %}
+
+            <button
+                type="submit"
+                class="w-full py-3 bg-purple-600 hover:bg-purple-700 rounded-xl font-semibold transition">
+                Add to Cart
+            </button>
+        </form>
+
+    </div>
+</div>
+
+<!-- Description -->
+<div class="glass p-6 rounded-2xl shadow-xl text-white backdrop-blur-xl mt-8">
+    <h3 class="text-xl font-bold mb-4">
+        Product Description
+    </h3>
+
+    <p class="leading-relaxed text-gray-300">
+        {{ product.description }}
+    </p>
+</div>
+
+{% endblock 'hero' %}

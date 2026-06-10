@@ -160,9 +160,12 @@ def activate_account(request,uid,token):
 @login_required
 def cart(request):
     cart=Carts.objects.filter(user=request.user)
+    user=request.user
+    orders=user.order_set.all()
+    print(orders)
     for cart in cart:
         quantities=Quantity.objects.filter(cart=cart)
-
+        
         if request.method == 'POST':
             data=json.loads(request.body)
             action=data.get("action")
@@ -192,7 +195,7 @@ def cart(request):
                     return redirect('cart')
 
 
-    return render(request,'website/cart.html',{'quantities':quantities})
+    return render(request,'website/cart.html',{'quantities':quantities,'orders':orders})
 
 
 def forgot_pass(request):
@@ -221,14 +224,12 @@ def buy(request,id):
             price_of_order=quantity.price_for_user
             item_name=quantity.quantity_items.name
         form=OrderForm(request.POST)
-        print('Here....................')
         if form.is_valid():
-            print(f'----{form.errors}')
-            print('here2.............................')
             payment_method=form.cleaned_data['payment_method']
             form=form.save(commit=False)    
           
             form.payment_method=payment_method
+            form.user=request.user
           
             form.save()
            
@@ -237,9 +238,7 @@ def buy(request,id):
         
         else:
             print(form.errors)
-            print('error occurd in form validation')
     else:
-        print('here33........................')
         form=OrderForm()
         if Quantity.objects.filter(id=id).first():
             quantity=Quantity.objects.get(id=id)
@@ -286,3 +285,7 @@ def delete_account(request):
         messages.error(request,'Your account has beeen deleted.')
         return redirect('home')
     return render(request,'website/confirm_delete.html')
+
+
+def checkout(request):
+    return render(request,'website/checkout.html')
