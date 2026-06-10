@@ -22,5 +22,5 @@ urlpatterns = [
     path('change_password/',change_password,name='change_password'),
     path('edit_profile/',edit_profile,name='edit_profile'),
     path('delete_account/',delete_account,name='delete_account'),
-    path('checkout/',checkout,name='checkout')
+    path('checkout/<str:id>',checkout,name='checkout')
 ]

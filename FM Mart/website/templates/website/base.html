@@ -138,9 +138,9 @@
         <input type='submit' class="flex-1 p-3 rounded-xl bg-blue-600 hover:bg-blue-700 transition" value='Add to Cart'>
         </form>
 
-        <button class="flex-1 p-3 rounded-xl bg-green-600 hover:bg-green-700 transition">
-          Buy Now
-        </button>
+        <a class="flex-1 p-3 rounded-xl bg-green-600 hover:bg-green-700 transition" href="{% url 'checkout' item.id %}">
+          Checkout
+        </a>
       </div>
     </div>
       {% endif  %}
@@ -151,7 +151,7 @@
           Add to Cart
         </a>
         <a href="{% url 'login' %}" class="flex-1 p-3 rounded-xl bg-green-600 hover:bg-green-700 transition">
-          Buy Now
+          Checkout
         </a>
       </div>
     </div>

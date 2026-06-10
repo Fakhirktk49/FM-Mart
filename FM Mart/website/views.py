@@ -287,5 +287,11 @@ def delete_account(request):
     return render(request,'website/confirm_delete.html')
 
 
-def checkout(request):
-    return render(request,'website/checkout.html')
+def checkout(request,id):
+    if Items.objects.filter(id=id).first():
+        item=Items.objects.filter(id=id).first()
+    else:
+        messages.error(request,'Some error occured.')
+        return redirect('home')
+
+    return render(request,'website/checkout.html',{'item':item})

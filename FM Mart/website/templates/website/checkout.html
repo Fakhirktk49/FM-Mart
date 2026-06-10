@@ -22,77 +22,82 @@
 {% block 'hero' %}
 
 
+<div class="min-h-screen flex justify-center pt-24 pb-10 px-4">
 
-<div class="glass w-full p-6 rounded-2xl mb-10 shadow-xl text-white backdrop-blur-xl">
-    <h1 class="text-3xl font-bold mb-2">{{ product.name }}</h1>
-    <p class="opacity-80">{{ product.category.name }}</p>
-</div>
+    <div class="max-w-5xl w-full glass p-8 rounded-2xl shadow-xl text-white backdrop-blur-xl">
 
-<div class="grid lg:grid-cols-2 gap-8">
+    <div class="min-h-screen flex justify-center items-center px-4">
 
-    <!-- Product Image -->
-    <div class="glass p-6 rounded-2xl shadow-xl backdrop-blur-xl">
-        <img
-            src="{{ product.image.url }}"
-            alt="{{ product.name }}"
-            class="w-full h-96 object-cover rounded-xl">
-    </div>
+    <div class="max-w-5xl w-full glass p-8 rounded-2xl shadow-xl text-white backdrop-blur-xl">
 
-    <!-- Product Information -->
-    <div class="glass p-6 rounded-2xl shadow-xl text-white backdrop-blur-xl">
+        <!-- HEADER -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold mb-2">{{ item.name }}</h1>
+        </div>
 
-        <h2 class="text-2xl font-bold mb-4">
-            {{ product.name }}
-        </h2>
+        <!-- CENTER IMAGE -->
+        <div class="flex justify-center mb-8">
+            <div class="relative">
+                <img
+                    src="{{ item.item_image.url }}"
+                    alt="{{ item.name }}"
+                    class="w-[320px] h-[320px] object-cover rounded-full shadow-2xl border-4 border-white/20">
 
-        <p class="text-3xl font-bold text-green-400 mb-6">
-            Rs. {{ product.price }}
-        </p>
-
-        <div class="space-y-4 mb-6">
-            <div>
-                <span class="font-semibold">Brand:</span>
-                {{ product.brand }}
-            </div>
-
-            <div>
-                <span class="font-semibold">Stock:</span>
-
-                {% if product.stock > 0 %}
-                    <span class="text-green-400">In Stock</span>
-                {% else %}
-                    <span class="text-red-400">Out of Stock</span>
-                {% endif %}
-            </div>
-
-            <div>
-                <span class="font-semibold">Category:</span>
-                {{ product.category.name }}
+                <div class="absolute inset-0 rounded-full bg-purple-500/10 blur-2xl"></div>
             </div>
         </div>
 
-        <form method="post" action="{% url 'add_to_cart' product.id %}">
-            {% csrf_token %}
+        <!-- TRIANGLE INFO (CENTERED GRID) -->
+        <div class="grid md:grid-cols-3 gap-6 text-center">
 
-            <button
-                type="submit"
-                class="w-full py-3 bg-purple-600 hover:bg-purple-700 rounded-xl font-semibold transition">
-                Add to Cart
-            </button>
-        </form>
+            <div class="glass p-4 rounded-xl">
+                <p class="text-sm opacity-70">Price</p>
+                <p class="text-xl font-bold text-green-400">
+                    Rs. {{ item.price }}$
+                </p>
+            </div>
+
+            <div class="glass p-4 rounded-xl">
+                <p class="text-sm opacity-70">Name</p>
+                <p class="text-lg font-semibold">
+                    {{ item.name }}
+                </p>
+            </div>
+
+            <div class="glass p-4 rounded-xl">
+                <p class="text-sm opacity-70">Stock</p>
+
+               
+                    <p class="text-green-400 font-semibold">In Stock</p>
+               
+            </div>
+
+        </div>
+
+        <!-- DESCRIPTION -->
+        <div class="mt-8 text-center max-w-2xl mx-auto">
+            <h3 class="text-xl font-bold mb-2">Description</h3>
+            <p class="text-gray-300 leading-relaxed">
+                {{ item.description }}
+            </p>
+        </div>
+
+        <!-- BUTTON -->
+        <div class="mt-8 flex justify-center">
+            <form method="post" action="{% url 'home' %}">
+                {% csrf_token %}
+                <input type="hidden" value="{{item.id}}" name="id">
+                <button class="px-8 py-3 bg-purple-600 hover:bg-purple-700 rounded-xl font-semibold transition">
+                    Add to Cart
+                </button>
+            </form>
+        </div>
 
     </div>
+
 </div>
 
-<!-- Description -->
-<div class="glass p-6 rounded-2xl shadow-xl text-white backdrop-blur-xl mt-8">
-    <h3 class="text-xl font-bold mb-4">
-        Product Description
-    </h3>
+    </div>
 
-    <p class="leading-relaxed text-gray-300">
-        {{ product.description }}
-    </p>
 </div>
-
 {% endblock 'hero' %}
