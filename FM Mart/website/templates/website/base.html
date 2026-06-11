@@ -46,16 +46,17 @@
 
     <!-- Icons -->
     <div class="flex items-center gap-5 text-2xl">
-      <!-- Search -->
-      <button><i class="fa fa-search"></i></button>
+     
 
     {% if user.is_authenticated %}
       <!-- Cart -->
-     <a href="{% url 'cart' %}"> <button><i class="fa fa-shopping-cart"></i></button></a>
-     
+     <a href="{% url 'cart' %}">
+        <img src="https://cdn-icons-png.flaticon.com/512/1170/1170678.png" 
+        alt="cart"
+        class="w-8 h-8 rounded-full"> </a>
 
        <a href="{% url 'profile' %}">
-        <img src="https://www.citypng.com/public/uploads/preview/hd-profile-user-round-blue-icon-transparent-png-20641.png"
+        <img src="https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png" 
         alt="User Profile"
         class="w-8 h-8 rounded-full"> </a>
          {% endif %}
