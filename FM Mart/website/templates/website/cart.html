@@ -103,6 +103,15 @@
         {% for quantity in quantities %}
         <!-- Cart Item Card -->
         <div class="glass p-5 rounded-2xl shadow-xl text-white hover:scale-105 transition transform duration-300">
+        <div>
+            <form method="POST" action="{% url 'remove_from_cart' %}">
+                {% csrf_token %}
+                <input type="hidden" value="{{quantity.quantity_items.id}}" name="id">
+            <input type='submit' value="✕"
+   class="w-8 h-8 flex items-center justify-center rounded-full bg-red-500/20 hover:bg-red-500/40 text-red-400">
+
+</form></div><br>
+           
             <img src='{{quantity.quantity_items.item_image.url}}' class="w-full h-40 object-cover rounded-xl mb-4" />
 
             <h2 class="text-xl font-bold">{{quantity.quantity_items.name}}</h2>
@@ -136,8 +145,8 @@
             </div>
 
            <div class="flex gap-3 mt-5  hover:scale-105 transition transform duration-300">
-        <a href="{% url 'buy' quantity.id %}" class="flex-1 p-3 rounded-xl bg-blue-600 hover:bg-blue-700 transition">
-          Add to Cart
+        <a href="{% url 'checkout' quantity.id %}" class="flex-1 p-3 rounded-xl bg-blue-600 hover:bg-blue-700 transition">
+          Checkout
         </a>
         <a href="{% url 'buy' quantity.id %}" class="flex-1 p-3 rounded-xl bg-green-600 hover:bg-green-700 transition">
           Buy Now

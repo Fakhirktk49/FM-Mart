@@ -218,11 +218,15 @@ def profile(request):
 @login_required
 def buy(request,id):
     if request.method == 'POST':
-        if Quantity.objects.filter(id=id).first():
-            quantity=Quantity.objects.get(id=id)
-            quantity_of_order=quantity.quantity
-            price_of_order=quantity.price_for_user
-            item_name=quantity.quantity_items.name
+        try:
+            if Quantity.objects.filter(id=id).first():
+                quantity=Quantity.objects.get(id=id)
+                quantity_of_order=quantity.quantity
+                price_of_order=quantity.price_for_user
+                item_name=quantity.quantity_items.name
+        except:
+            messages.error(request,'Some exception occured.')
+            return redirect('cart')
         form=OrderForm(request.POST)
         if form.is_valid():
             payment_method=form.cleaned_data['payment_method']
@@ -232,7 +236,7 @@ def buy(request,id):
             form.user=request.user
           
             form.save()
-           
+            quantity.delete()
             messages.success(request,'Order placed successfully.')
             return redirect('home')
         
@@ -240,13 +244,13 @@ def buy(request,id):
             print(form.errors)
     else:
         form=OrderForm()
-        if Quantity.objects.filter(id=id).first():
+        try:     
             quantity=Quantity.objects.get(id=id)
             quantity_of_order=quantity.quantity
             price_of_order=quantity.price_for_user
             item_name=quantity.quantity_items.name
-        else:
-            messages.error(request,'Some error occured.')
+        except:
+            messages.error(request,'Some exception occured.')
             return redirect('cart')
     return render(request,'website/buy.html',{'form':form,'item_name':item_name,'quantity_of_order':quantity_of_order,'price_of_order':price_of_order})
 
@@ -281,17 +285,38 @@ def edit_profile(request):
 
 def delete_account(request):
     if request.method == 'POST':
+        user=request.user
         CustomUser.objects.filter(id=request.user.id).delete()
         messages.error(request,'Your account has beeen deleted.')
         return redirect('home')
-    return render(request,'website/confirm_delete.html')
+    else:
+        user=request.user
+    return render(request,'website/confirm_delete.html',{'profile':user})
 
 
 def checkout(request,id):
-    if Items.objects.filter(id=id).first():
+    try:
         item=Items.objects.filter(id=id).first()
-    else:
-        messages.error(request,'Some error occured.')
-        return redirect('home')
-
+    except:
+        messages.error(request,'Some exception occured')
+        return redirect('cart')
     return render(request,'website/checkout.html',{'item':item})
+
+def remove_from_cart(request):
+    if request.method == 'POST':
+        try:
+            print("here........")
+            id=request.POST.get('id')
+            item=Items.objects.filter(id=id).first()
+            cart=Carts.objects.filter(user=request.user).first()
+            item_to_be_deleted=Quantity.objects.filter(cart=cart,quantity_items=item)
+            print("here2.................")
+            item_to_be_deleted.delete()
+            messages.success(request,'Item removed from cart')
+            return redirect('cart')
+
+        except:
+            messages.error(request,'Some exception occured.')
+            return redirect('cart')
+
+

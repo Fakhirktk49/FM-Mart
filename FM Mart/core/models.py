@@ -83,7 +83,7 @@ class Quantity(models.Model):
     quantity=models.PositiveIntegerField(default=0)
 
 class Order(models.Model):
-    user=models.ForeignKey(CustomUser,on_delete=models.DO_NOTHING,default=None)
+    user=models.ForeignKey(CustomUser,on_delete=models.SET_DEFAULT,default=None,null=True)
     name=models.CharField()
     email=models.EmailField()
     phone=models.CharField()

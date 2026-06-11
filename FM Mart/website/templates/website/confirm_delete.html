@@ -1,8 +1,124 @@
+{% extends 'website/base.html' %}
+{% load custom_filters %}
 
+{% block 'css' %}
 
+ <style>
+    .glass {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
 
-<h1>If you want to delete account then click yes.</h1>
-<form method="POST">
-    {% csrf_token %}
-<input type="submit" value="Delete">
-</form>
+    @keyframes fadeUp {
+      0% { opacity: 0; transform: translateY(25px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-up {
+      animation: fadeUp 0.9s ease forwards;
+    }
+    </style>
+{% endblock %}
+
+{% block 'hero' %}
+<br>
+<div class="min-h-screen flex items-center justify-center px-4">
+
+    <div class="w-full max-w-lg bg-gray-900 border border-red-500/30 rounded-3xl shadow-2xl p-8">
+
+        <!-- Header -->
+        <div class="text-center">
+            <h1 class="text-3xl font-bold text-red-500">
+                Confirm Deletion
+            </h1>
+
+            <p class="text-gray-400 mt-3">
+                This action cannot be undone.
+            </p>
+        </div>
+
+        <!-- Object Details -->
+        <div class="mt-8 bg-gray-800 rounded-2xl p-5">
+
+            {% if profile.profile_image %}
+                <img src="{{ profile.profile_image.url }}"
+                     class="w-full h-52 object-cover rounded-xl mb-4">
+            {% endif %}
+
+            <h2 class="text-xl font-semibold text-white">
+                {{ profile.name }}
+            </h2>
+
+            <p class="text-gray-400 mt-2">
+                You are about to permanently delete this item.
+            </p>
+        </div>
+
+        <!-- Warning -->
+        <div class="mt-6 border border-yellow-500/30 bg-yellow-500/10 rounded-xl p-4">
+            <p class="text-yellow-300 text-sm">
+                To confirm deletion, type:
+                {% if profile.name %}
+                <strong class="text-white">{{ profile.name }}</strong>
+                {% endif %}
+                {% if not profile.name %}
+                <strong class="text-white">{{ profile.email|get_temp_name }}</strong>
+                {% endif %}
+            </p>
+        </div>
+
+        <!-- Form -->
+        <form method="POST" class="mt-6">
+            {% csrf_token %}
+
+            <input
+                id="confirmInput"
+                type="text"
+                placeholder="Type '{{ profile.name }}'"
+                class="w-full px-4 py-3 rounded-xl bg-gray-800 text-white border border-gray-700 focus:border-red-500 focus:outline-none">
+
+            <div class="flex gap-4 mt-6">
+
+                <a href="javascript:history.back()"
+                   class="flex-1 text-center bg-gray-700 hover:bg-gray-600 text-white py-3 rounded-xl transition">
+                    Cancel
+                </a>
+
+                <button
+                    id="deleteBtn"
+                    type="submit"
+                    disabled
+                    class="flex-1 bg-red-600 opacity-50 cursor-not-allowed text-white py-3 rounded-xl transition">
+                    Delete
+                </button>
+
+            </div>
+        </form>
+
+    </div>
+
+</div>
+
+<script>
+const expectedName = "{{ profile.name|default:profile.email|get_temp_name|escapejs }}";
+const input = document.getElementById("confirmInput");
+const button = document.getElementById("deleteBtn");
+
+input.addEventListener("input", function () {
+
+    if (input.value.trim() === expectedName) {
+        button.disabled = false;
+        button.classList.remove("opacity-50", "cursor-not-allowed");
+        button.classList.add("hover:bg-red-700");
+    } else {
+        button.disabled = true;
+        button.classList.add("opacity-50", "cursor-not-allowed");
+        button.classList.remove("hover:bg-red-700");
+    }
+
+});
+</script>
+
+{% endblock %}
