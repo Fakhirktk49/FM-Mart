@@ -12,7 +12,7 @@ urlpatterns = [
     path('login/',loginview,name='login'),
     path('register/',register,name='register'),
     path('forgot_pass/',forgot_pass,name='forgot_pass'),
-    path('verify_email/',verify_email,name='verif_email'),
+    # path('verify_email/',verify_email,name='verif_email'),
     path('activation_email/',TemplateView.as_view(template_name='website/activation_email.html'),name='activation_email'),
     path('activate_account/<str:uid>/<str:token>/',activate_account,name='activate_account'),
     path('profile/',profile,name='profile'),
