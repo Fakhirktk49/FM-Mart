@@ -107,26 +107,30 @@ def loginview(request):
     return render(request,'website/login.html')
 
 def register(request):
-    if request.method == 'POST':
-        form=RegistrationForm(request.POST,request.FILES)
-        print(form.errors)
-        if form.is_valid():
-            password=form.cleaned_data['password']
-            user=form.save(commit=False)
-            user.set_password(password)
-            user.save()
-            Carts.objects.create(user=user)
+    try:
+        if request.method == 'POST':
+            form=RegistrationForm(request.POST,request.FILES)
+            print(form.errors)
+            if form.is_valid():
+                password=form.cleaned_data['password']
+                user=form.save(commit=False)
+                user.set_password(password)
+                user.save()
+                Carts.objects.create(user=user)
 
-            url64id=user.id
-            email=user.email
-            uid=urlsafe_base64_encode(force_bytes(url64id))
-            token=default_token_generator.make_token(user)
-            url=reverse('activate_account',kwargs={'uid':uid,'token':token})
-            redirect_url=f'{settings.SITE_URL}{url}'
-            email_sender(redirect_url,email)
-            messages.success(request,'Activation link has been sent to your email click on it to activate your account.')
-    else:  
-         form=RegistrationForm()
+                url64id=user.id
+                email=user.email
+                uid=urlsafe_base64_encode(force_bytes(url64id))
+                token=default_token_generator.make_token(user)
+                url=reverse('activate_account',kwargs={'uid':uid,'token':token})
+                redirect_url=f'{settings.SITE_URL}{url}'
+                email_sender(redirect_url,email)
+                messages.success(request,'Activation link has been sent to your email click on it to activate your account.')
+        else:  
+            form=RegistrationForm()
+    except:
+        messages.error(request,'Some exception occured.Try again.')
+        return redirect('register')
     return render(request,'website/register.html',{'form':form})
 
 def activate_account(request,uid,token):
@@ -165,6 +169,7 @@ def cart(request):
     print(orders)
     for cart in cart:
         quantities=Quantity.objects.filter(cart=cart)
+        print(quantities)
         
         if request.method == 'POST':
             data=json.loads(request.body)
@@ -219,23 +224,41 @@ def profile(request):
 def buy(request,id):
     if request.method == 'POST':
         try:
-            if Quantity.objects.filter(id=id).first():
-                quantity=Quantity.objects.get(id=id)
-                quantity_of_order=quantity.quantity
-                price_of_order=quantity.price_for_user
-                item_name=quantity.quantity_items.name
+            if Carts.objects.filter(user=request.user):
+                cart=Carts.objects.filter(user=request.user)
+                for cart in cart:
+                    if Quantity.objects.filter(cart=cart,id=id).first():
+                        item=Quantity.objects.get(id=id)
+                        quantity_of_order=item.quantity_items 
+                        price_of_order=item.price_for_user
+                        item_name=item.quantity_items.name
+                        item_id=item.quantity_items.id
+                        print(item_id)
+                        item_for_relation=Items.objects.get(id=item_id)
+
+            else:
+                item=Items.objects.filter(id=id).first()
+                quantity_of_order=1
+                price_of_order=item.price
+                item_name=item.name
+                item_id=item.id
+                item_for_relation=Items.objects.filter(id=item_id)
+
         except:
             messages.error(request,'Some exception occured.')
             return redirect('cart')
+
         form=OrderForm(request.POST)
         if form.is_valid():
             payment_method=form.cleaned_data['payment_method']
             form=form.save(commit=False)    
-          
+        
             form.payment_method=payment_method
             form.user=request.user
-          
+            form.item_relation=item_for_relation
+        
             form.save()
+            quantity=Quantity.objects.filter(id=id).first()
             quantity.delete()
             messages.success(request,'Order placed successfully.')
             return redirect('home')
@@ -319,4 +342,16 @@ def remove_from_cart(request):
             messages.error(request,'Some exception occured.')
             return redirect('cart')
 
+def view_order(request,id):
+    try:
+        order=Order.objects.filter(user=request.user,id=id).first()
+        print(order)
+        item_image=order.item_relation.item_image
+        print(item_image)
+        description=order.item_relation.description
+        print(description)
+    except:
+        messages.error(request,'Some exception occured.')
+        return redirect('cart')
+    return render(request,'website/view_order.html',{'order':order,'item_image':item_image,'description':description})
 

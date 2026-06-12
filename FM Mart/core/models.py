@@ -84,6 +84,7 @@ class Quantity(models.Model):
 
 class Order(models.Model):
     user=models.ForeignKey(CustomUser,on_delete=models.SET_DEFAULT,default=None,null=True)
+    item_relation=models.ForeignKey(Items,on_delete=models.SET_NULL,null=True,blank=True)
     name=models.CharField()
     email=models.EmailField()
     phone=models.CharField()
