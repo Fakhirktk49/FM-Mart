@@ -52,7 +52,7 @@
 
                   {% if field.html_name == 'price' %}
                  <label class="text-gray-300" for="{{field.html_name}}">{{field.label_tag}}</label>
-                 <input type="{{field.field.widget.input_type}}" id="{{field.html_name}}" name="{{field.html_name}}" class="{{field.field.widget.attrs.class}}" value="{{price_of_order}}$" readonly>
+                 <input type="{{field.field.widget.input_type}}" id="{{field.html_name}}" name="{{field.html_name}}" class="{{field.field.widget.attrs.class}}" value="Rs.{{price_of_order}}" readonly>
 
                  {% endif %}
                         

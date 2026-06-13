@@ -36,7 +36,7 @@
     <div class="text-2xl font-bold">MyShop</div>
 
     <!-- Center Links -->
-    <ul class="hidden md:flex gap-8 text-lg">
+    <ul class="flex gap-4 md:gap-8 text-sm md:text-lg flex-wrap justify-center">
       <li><a href="{% url 'home' %}" class="hover:text-blue-400 transition">Home</a></li>
       {% if not user.is_authenticated %}
       <li><a href="{% url 'register' %}" class="hover:text-blue-400 transition">Register</a></li>
@@ -118,21 +118,20 @@
 
 
   <!-- PRODUCT CARDS -->
-  <section class="mt-20 px-6 md:px-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 ">
+  <section class="mt-20 px-4 md:px-16 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-10">
     {% for item in items %}
     <!-- CARD 1 -->
-    <div class="glass p-6 rounded-3xl fade-up"
-         style="animation-delay:0.2s;">
+    <div class="glass p-4 sm:p-6 rounded-2xl fade-up flex flex-col w-full overflow-hidden">
       <img 
         src="{{item.item_image.url}}" 
-        class="w-full h-48 object-cover rounded-2xl mb-4">
+        class="w-full h-32 sm:h-40 object-cover rounded-xl">
       
-      <h3 class="text-2xl font-bold">{{item.name}}</h3>
-      <p class="opacity-80 mt-1">{{item.description|truncatewords:10}}.</p>
-      <p class="mt-2 font-semibold text-xl">${{item.price}}</p>
+      <h3 class="text-lg sm:text-2xl font-bold truncate">{{item.name}}</h3>
+      <p class="text-xs sm:text-sm opacity-80 line-clamp-2">{{item.description|truncatewords:10}}.</p>
+      <p class="mt-1 font-semibold text-lg sm:text-xl">Rs.{{item.price}}</p>
 
       {% if user.is_authenticated %}
-      <div class="flex gap-3 mt-5  hover:scale-105 transition transform duration-300">
+     <div class="mt-auto flex flex-col sm:flex-row gap-3 pt-3">
         <form method="POST">
           {% csrf_token %}
         <input type="hidden" name="id" value="{{item.id}}">
@@ -147,7 +146,7 @@
       {% endif  %}
 
        {% if not user.is_authenticated %}
-      <div class="flex gap-3 mt-5  hover:scale-105 transition transform duration-300">
+     <div class="mt-auto flex flex-col sm:flex-row gap-3 pt-3">
         <a href="{% url 'login' %}" class="flex-1 p-3 rounded-xl bg-blue-600 hover:bg-blue-700 transition">
           Add to Cart
         </a>
