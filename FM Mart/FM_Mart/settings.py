@@ -18,7 +18,7 @@ MEDIA_URL='/images/'
 SECRET_KEY = 'django-insecure-($$g#!-y(w6f^tq0(x#)i-3aqiwlq-rlrw!vuky=qks7+a23)='
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -138,3 +138,38 @@ DEFAULT_FORM_EMAIL=EMAIL_HOST_USER
 LOGIN_URL='home'
 
 EMAIL_BACKEND='django.core.mail.backends.console.EmailBackend'
+
+LOGGING={
+    'version':1,
+    'disable_default_loggers':False,
+
+    'formatters':{
+        'standard':{
+            'format':' {levelname} {filename} {name} {lineno} {asctime} {module} {pathname} {funcName} {message}',
+            'style':'{'
+        },
+        'simple': { 
+            'format':'{levelname} {lineno} {asctime} {message}',
+            'style':'{'
+        }
+    },
+
+    'handlers':{
+        'file':{
+            'class':'logging.FileHandler',
+            'level':'ERROR',
+            'filename':BASE_DIR / 'file_logs/logs.log',
+            'formatter':'standard',
+
+         }
+     
+    },
+
+     'loggers':{
+         '':{
+            'handlers':['file'],
+            'level':'ERROR',
+             'propagate':False
+         }
+     }
+}
