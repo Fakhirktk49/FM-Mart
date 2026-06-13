@@ -355,3 +355,7 @@ def view_order(request,id):
         return redirect('cart')
     return render(request,'website/view_order.html',{'order':order,'item_image':item_image,'description':description})
 
+
+def test_view(request):
+    a=1/0
+    return a

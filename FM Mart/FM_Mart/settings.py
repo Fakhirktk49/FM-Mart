@@ -18,7 +18,7 @@ MEDIA_URL='/images/'
 SECRET_KEY = 'django-insecure-($$g#!-y(w6f^tq0(x#)i-3aqiwlq-rlrw!vuky=qks7+a23)='
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = False    
 
 ALLOWED_HOSTS = ['*']
 
@@ -157,7 +157,7 @@ LOGGING={
     'handlers':{
         'file':{
             'class':'logging.FileHandler',
-            'level':'ERROR',
+            'level':'INFO',
             'filename':BASE_DIR / 'file_logs/logs.log',
             'formatter':'standard',
 
@@ -166,9 +166,9 @@ LOGGING={
     },
 
      'loggers':{
-         '':{
+         'django':{
             'handlers':['file'],
-            'level':'ERROR',
+            'level':'INFO',
              'propagate':False
          }
      }
