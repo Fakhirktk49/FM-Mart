@@ -277,6 +277,7 @@ def buy(request,id):
             return redirect('cart')
     return render(request,'website/buy.html',{'form':form,'item_name':item_name,'quantity_of_order':quantity_of_order,'price_of_order':price_of_order})
 
+@login_required
 def change_password(request):
     if request.method == 'POST':
         form=PasswordChangeForm(request.user,request.POST)
@@ -289,6 +290,7 @@ def change_password(request):
        form=PasswordChangeForm(request.user)
     return render(request,'website/change_password.html',{'form':form})
 
+@login_required
 def edit_profile(request):
     id=request.user.id
     obj=CustomUser.objects.get(id=id)
@@ -306,6 +308,7 @@ def edit_profile(request):
         form=EditForm(instance=obj)
     return render(request,'website/edit_profile.html',{'form':form})
 
+@login_required
 def delete_account(request):
     if request.method == 'POST':
         user=request.user
@@ -325,6 +328,7 @@ def checkout(request,id):
         return redirect('cart')
     return render(request,'website/checkout.html',{'item':item})
 
+@login_required
 def remove_from_cart(request):
     if request.method == 'POST':
         try:
@@ -342,6 +346,7 @@ def remove_from_cart(request):
             messages.error(request,'Some exception occured.')
             return redirect('cart')
 
+@login_required
 def view_order(request,id):
     try:
         order=Order.objects.filter(user=request.user,id=id).first()
@@ -355,7 +360,3 @@ def view_order(request,id):
         return redirect('cart')
     return render(request,'website/view_order.html',{'order':order,'item_image':item_image,'description':description})
 
-
-def test_view(request):
-    a=1/0
-    return a
