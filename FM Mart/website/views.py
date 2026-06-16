@@ -118,9 +118,9 @@ def register(request):
                 user.save()
                 Carts.objects.create(user=user)
 
-                url64id=user.id
+                id=user.id
                 email=user.email
-                uid=urlsafe_base64_encode(force_bytes(url64id))
+                uid=urlsafe_base64_encode(force_bytes(id))
                 token=default_token_generator.make_token(user)
                 url=reverse('activate_account',kwargs={'uid':uid,'token':token})
                 redirect_url=f'{settings.SITE_URL}{url}'
@@ -320,7 +320,7 @@ def buy(request,id):
             quantity=Quantity.objects.filter(id=id).first()
             quantity.delete()
             messages.success(request,'Order placed successfully.')
-            return redirect('home')
+            return redirect('cart')
         
         else:
             print(form.errors)
@@ -381,7 +381,17 @@ def delete_account(request):
 
 def checkout(request,id):
     try:
-        item=Items.objects.filter(id=id).first()
+        if request.user.is_authenticated:
+            cart=Carts.objects.filter(user=request.user).first()
+            if Quantity.objects.filter(id=id,cart=cart).first():     
+                quantity=Quantity.objects.filter(id=id,cart=cart).first()
+                item=quantity.quantity_items
+            
+            else:
+                item=Items.objects.filter(id=id).first()
+        else:
+            item=Items.objects.filter(id=id).first()
+            print("hi")
     except:
         messages.error(request,'Some exception occured')
         return redirect('cart')

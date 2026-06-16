@@ -1,9 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager,AbstractBaseUser
-choices=(('cash_on_delevry','cash_on_delevery'),
-         ('easypaisa','easypaisa'),
-         ('jazcash','jazcash'),
-         ('back_transfer','back transfer'))
+choices=(('Cash On delivery','Cash On delivery'),
+         ('Easypaisa','Easypaisa'),
+         ('Jazcash','Jazcash'),
+         ('Bank Transfer','Bank Transfer'))
 
 STATUS_CHOICES=(('Pending','Pending'),
                 ('On The Way','On The Way'),

@@ -5,16 +5,19 @@ from django.core.exceptions import ValidationError
 
 import re
 
-CHOICES=(('cash_on_delevry','cash_on_delevery'),
-         ('easypaisa','easypaisa'),
-         ('jazcash','jazcash'),
-         ('back_transfer','back transfer'))
+CHOICES=(('Cash On Delivery','Cash On Delivery'),
+         ('Easypaisa','Easypaisa'),
+         ('Jazcash','Jazcash'),
+         ('Bank Transfer','Bank Transfer'))
 
 phone_regex=RegexValidator(regex='^03[0-9]{9}$',message='Enter a valid Number(e.g., 03001234567 or +9230001234567)')
 
-#password_regex=RegexValidator(pattern='^?=.*[a-z](?=.*[A-Z])(?=.*\d)(?=.*[@%!%*?&])[A-Za-z\d@$!%*?&]{8,$}',message='1.Password Must Have At least one lower,upper case letter a digit and one special character and minimum 8 digits.')
+password_regex = RegexValidator(
+    regex=r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$',
+    message='Password must contain at least one lowercase letter, one uppercase letter, one digit, one special character, and be at least 8 characters long.'
+)
 class RegistrationForm(forms.ModelForm):
-    password=forms.CharField(help_text='1.Upper case\n 2.Lower case\n 3.A special character\n 4.A digit ',widget=forms.PasswordInput(attrs={'placeholder':'Enter a strong password.','class':'w-full p-3 rounded-xl bg-white/10 focus:bg-white/20 outline-none transition'}))
+    password=forms.CharField(validators=[password_regex],widget=forms.PasswordInput(attrs={'placeholder':'Enter a strong password.','class':'w-full p-3 rounded-xl bg-white/10 focus:bg-white/20 outline-none transition'}))
     conf_password=forms.CharField(widget=forms.PasswordInput(attrs={'placeholder':'Enter your password again.','class':'w-full p-3 rounded-xl bg-white/10 focus:bg-white/20 outline-none transition'}))
     class Meta:
         model=CustomUser
@@ -33,7 +36,7 @@ class RegistrationForm(forms.ModelForm):
             raise ValidationError('Please! Enter a valid Email Adress.')
         
         if CustomUser.objects.filter(email=email).exists():
-            raise ValidationError('This email has already been registered.')
+            raise ValidationError('This email has already been registered.Try login.')
         
         return  email
     

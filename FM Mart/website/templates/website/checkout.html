@@ -84,15 +84,26 @@
         </div>
 
         <!-- BUTTON -->
+         {% if user.is_authenticated %}
         <div class="mt-8 flex justify-center">
             <form method="post" action="{% url 'home' %}">
                 {% csrf_token %}
-                <input type="hidden" value="{{item.id}}" name="id">
+                <input type="hidden" value="{{quantity.id}}" name="id">
                 <button class="px-8 py-3 bg-purple-600 hover:bg-purple-700 rounded-xl font-semibold transition">
                     Add to Cart
                 </button>
             </form>
         </div>
+        {% endif %}
+
+         {% if not user.is_authenticated %}
+        <div class="mt-8 flex justify-center">
+                <a class="px-8 py-3 bg-purple-600 hover:bg-purple-700 rounded-xl font-semibold transition" href="{% url 'login' %}">
+                    Add to Cart
+                </a>
+            </form>
+        </div>
+        {% endif %}
 
     </div>
 

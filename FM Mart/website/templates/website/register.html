@@ -29,15 +29,14 @@
         {% endfor%}
         {% endif %}
        {% for field in form %}
-       {% if field.name == 'email' or field.name == 'password' or field.name == 'conf_password' %}
        <input type="{{field.field.widget.input_type}}" id="{{field.html_name}}" name="{{field.html_name}}" class="{{field.field.widget.attrs.class}}" placeholder="{{field.field.widget.attrs.placeholder}}">
        {% if field.errors %}
        {% for error in field.errors %}
       <span class="text-red-600 text-sm mt-1"> {{error}}<br></span>
+      <br>
        {% endfor %} 
        {% endif %}
        {{field.help_text|linebreaksbr}}
-       {% endif %}
        {% endfor %}  
         <input type="submit" class="w-full bg-green-600 hover:bg-green-700 p-3 rounded-xl font-semibold transition"  value="Register">
       </form>
