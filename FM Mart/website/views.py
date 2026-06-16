@@ -6,14 +6,14 @@ from django.utils.encoding import force_bytes,force_str
 from django.contrib.auth.tokens import default_token_generator
 from django.urls import reverse
 from django.conf import settings
-from website.utils import email_sender
+from website.utils import email_sender,pass_reset_email_sender
 from django.contrib import messages
 from django.contrib.auth import authenticate,login
 from django.shortcuts import redirect
 from django.views.generic import ListView
 from django.db.models import F
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.forms import PasswordChangeForm,PasswordResetForm,SetPasswordForm
 from django.core.exceptions import ValidationError
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required,permission_required
@@ -204,10 +204,69 @@ def cart(request):
 
 
 def forgot_pass(request):
-    return render(request,'website/forgot_pass.html')
+    if request.method == 'POST':
+        form=PasswordResetForm(request.POST)
+        if form.is_valid():
+            email=form.cleaned_data.get('email')
+            if CustomUser.objects.filter(email=email).exists():
+                user=CustomUser.objects.filter(email=email)
+                for user in user:
+                    if user.is_active:
+                        id=user.id
+                        email=user.email
+                        base64uid=urlsafe_base64_encode(force_bytes(id))
+                        token=default_token_generator.make_token(user)
+                        url=reverse('confirm_reset_pass',kwargs={'uid':base64uid,'token':token})
+                        redirect_url=f'{settings.SITE_URL}{url}'
+                        pass_reset_email_sender(redirect_url,email)
+                        messages.success(request,'A passwrod reset link has been send to your email click on it to reest your password.')
+                        return redirect('login')
+                
+                    else:
+                        messages.error(request,"Please enter a valid email address.")
+                        return redirect('forgot_pass')
+
+            else:
+                messages.error(request,'Please enter a valid email address.')
+                return redirect('forgot_pass')
+            print("hi")
+            return redirect('home')
+
+    else:
+        form=PasswordResetForm()
+    return render(request,'website/forgot_pass.html',{'form':form})
+
+def confirm_rest_pass(request,uid,token):
+    try:
+        id=force_str(urlsafe_base64_decode(uid))
+        user=CustomUser.objects.filter(id=id).first()
+        if user:
+            if default_token_generator.check_token(user,token):
+                if request.method == 'POST':
+                    form=SetPasswordForm(user,request.POST)
+                    if form.is_valid():
+                        form.save()
+                        messages.success(request,'Password changed succesfully.')
+                        return redirect('login')
+                
+                else:
+                    form=SetPasswordForm(request.user)
+
+
+
+            else:
+                messages.error('Invalid link or it has been expired.')
+                return redirect('login')
+        else:
+            messages.error(request,"Invalid link or it has been expired.")
+            return redirect('login')
+    except Exception as e:
+        messages.error(request,'Invalid link or it has been expired.')
+        return redirect('login')
+    return render(request,'website/confirm_reset_pass.html',{'form':form})
 
 def verify_email(request):
-    return render(request,'website/verify_email.html')
+    return render(request,'website/confirm_reset_pass.html')
 
 @login_required
 def profile(request):

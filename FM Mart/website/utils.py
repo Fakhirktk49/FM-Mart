@@ -29,3 +29,16 @@ def email_sender(activation_url,email):
     except Exception as e:
         print(f'Some exception occured in consructing email {e}')
 
+def pass_reset_email_sender(activation_url,email):
+    try:
+        subject=f'Reset your password on {settings.SITE_NAME}'
+        to_email=[email]
+        html_content=render_to_string('website/password_reset_email.html',{'activation_url':activation_url})
+        text_content=strip_tags(html_content)
+        
+        send_email=EmailMultiAlternatives(subject,text_content,to=to_email)
+        send_email.attach_alternative(html_content,'text/html')
+        EmailSenderThread(send_email).start()
+    except Exception as e:
+         print(f'Some exception occured in consructing email {e}')
+

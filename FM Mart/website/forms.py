@@ -98,6 +98,8 @@ class OrderForm(forms.ModelForm):
                 'price':forms.TextInput(attrs={'class':'w-full p-3 rounded-xl bg-white/10 focus:bg-white/20 outline-none transition'})
                 
                 }
+        
+
     
         
    

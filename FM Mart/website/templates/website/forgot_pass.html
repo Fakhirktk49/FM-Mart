@@ -22,16 +22,29 @@
       <h1 class="text-3xl font-bold text-center mb-4">Forgot Password?</h1>
       <p class="text-center text-sm mb-6 opacity-80">Enter your email to receive a code.</p>
 
-      <form class="space-y-5">
-        <input type="email" placeholder="Your Email" class="w-full p-3 rounded-xl bg-white/10 focus:bg-white/20 outline-none transition" />
+      <form class="space-y-5" method="POST" novalidate>
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}
+         <span class="text-red-600 text-sm mt-1"> {{error}}<br></span>
+         {% endfor %}
+         {% endif %}
+       {% for field in form %}
+       <input type="{{field.field.widget.input_type}}" name="{{field.html_name}}" id="{{field.html_name}}" placeholder="Enter your email." class="w-full p-3 rounded-xl bg-white/10 focus:bg-white/20 outline-none transition">
+        {% if field.errors %}
+        {% for error in field.errors %}
+         <span class="text-red-600 text-sm mt-1"> {{error}}<br></span>
+         {% endfor %}
+         {% endif %}
+       {% endfor %}
+       
 
-        <button class="w-full bg-blue-600 hover:bg-blue-700 p-3 rounded-xl font-semibold transition">
-          Send OTP
-        </button>
+        <input class="w-full bg-blue-600 hover:bg-blue-700 p-3 rounded-xl font-semibold transition" type="submit" value="Send Link">
+         
       </form>
 
       <p class="text-center mt-5 text-sm opacity-80">
-        Back to <a href="login.html" class="text-blue-400 hover:underline">Login</a>
+        Back to <a href="{% url 'login' %}" class="text-blue-400 hover:underline">Login</a>
       </p>
     </div>
 

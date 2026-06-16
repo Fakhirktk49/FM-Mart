@@ -28,11 +28,16 @@
         <input type='submit' value='Login' class="w-full bg-blue-600 hover:bg-blue-700 p-3 rounded-xl font-semibold transition">
       </form>
 
-      <p class="text-center mt-6 text-sm opacity-80">
-        Don't have an account?
-        <a href="{% url 'register' %}" class="text-blue-400 hover:underline">Register</a>
-      </p>
-    </div>
+    <p class="text-center mt-6 text-sm opacity-80">
+    Don't have an account?
+    <a href="{% url 'register' %}" class="text-blue-400 hover:underline">Register</a>
+</p>
+
+<p class="text-center mt-2 text-sm">
+    <a href="{% url 'forgot_pass' %}" class="text-blue-400 hover:underline">
+        Forgot Password?
+    </a>
+</p>
 
   </div>
   

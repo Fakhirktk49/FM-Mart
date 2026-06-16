@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path
-from website.views import website,Home,about,loginview,register,forgot_pass,verify_email,activate_account,profile,cart,buy,change_password,edit_profile,delete_account,checkout,remove_from_cart,view_order
+from website.views import website,Home,about,loginview,register,forgot_pass,verify_email,activate_account,profile,cart,buy,change_password,edit_profile,delete_account,checkout,remove_from_cart,view_order,confirm_rest_pass
 from django.views.generic import TemplateView,RedirectView
 from django.contrib.auth.views import LogoutView
 from django.contrib import messages
@@ -25,6 +25,7 @@ urlpatterns = [
     path('checkout/<str:id>',checkout,name='checkout'),
     path('remove_from_cart/',remove_from_cart,name='remove_from_cart'),
     path('view_order/<int:id>',view_order,name='view_order'),
+    path('confirm_reset_pass/<str:uid>/<str:token>/',confirm_rest_pass,name='confirm_reset_pass')
 
 
 ]
